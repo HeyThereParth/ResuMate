@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { AIchatSession } from "./../../../../../service/AIModel";
 
 const prompt =
-  "Job Title: {jobTitle} , Depends on job title give me list of summary for 3 experience level, Mid Level and Freasher level in 3 -4 lines in array format, With summary and experience_level Field in JSON Format";
+  "Job Title: {jobTitle} , Depends on job title give me list of summary for 3 experience level, Mid Level and Fresher level in 1-2 lines in array format, With summary and experience_level Field in JSON Format";
 
 function Summary({ enabledNext }) {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
@@ -37,10 +37,9 @@ function Summary({ enabledNext }) {
       const responseText = await result.response.text();
       console.log("Raw AI response:", responseText);
 
-      // Parse the response text and extract summaries
+      // Parse the response text directly
       const parsedData = JSON.parse(responseText);
-      const summaries = parsedData.experience_levels || [];
-      setAiGeneratedSummaryList(summaries);
+      setAiGeneratedSummaryList(parsedData); // Update state with parsed data
     } catch (error) {
       console.error("Error generating summaries:", error);
       toast.error("Failed to generate summaries. Please try again.");
@@ -96,7 +95,6 @@ function Summary({ enabledNext }) {
             className="mt-5"
             required
             value={summary}
-            defaultValue={resumeInfo?.summary || ""}
             onChange={(e) => setSummary(e.target.value)}
           />
           <div className="mt-2 flex justify-end">
@@ -112,13 +110,13 @@ function Summary({ enabledNext }) {
           {aiGeneratedSummaryList.map((item, index) => (
             <div
               key={index}
-              onClick={() => setSummary(item.summary[0])} // Use the first summary from the array
+              onClick={() => setSummary(item.summary)} // Use the summary string directly
               className="p-5 shadow-lg my-4 rounded-lg cursor-pointer border border-gray-300 hover:shadow-xl transition-all"
             >
               <h2 className="font-bold my-1 text-primary">
                 Experience Level: {item.experience_level}
               </h2>
-              <p>{item.summary[0]}</p> {/* Display the first summary */}
+              <p>{item.summary}</p> {/* Display the summary string */}
             </div>
           ))}
         </div>
@@ -130,6 +128,7 @@ function Summary({ enabledNext }) {
 }
 
 export default Summary;
+
 
 
 

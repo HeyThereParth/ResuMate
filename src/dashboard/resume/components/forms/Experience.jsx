@@ -4,7 +4,9 @@ import React, { useContext, useEffect, useState } from "react";
 import RichTextEditor from "../RichTextEditor";
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
 import { LoaderCircle } from "lucide-react";
-
+import GlobalApi from './../../../../../service/GlobalApi'
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 const formField = {
   title: "",
   companyName: "",
@@ -19,16 +21,31 @@ const formField = {
 function Experience() {
   const [experienceList, setExperienceList] = useState([formField]);
   const {resumeInfo,setResumeInfo} = useContext(ResumeInfoContext);
+  const params=useParams();
+  const [loading,setLoading]=useState(false);
+  useEffect(()=>{
+    resumeInfo?.experience.length>0&&setExperienceList(resumeInfo?.experience)
+    
+},[])
 
-  const handleChange = (index, event) => {
-    const newEntries = experienceList.slice();
-    const {name, value} = event.target;
-    newEntries[index][name] = value;
+  const handleChange=(index,event)=>{
+    const newEntries=experienceList.slice();
+    const {name,value}=event.target;
+    newEntries[index][name]=value;
+    console.log(newEntries)
     setExperienceList(newEntries);
-  };
+}
 
   const AddNewExperience = () => {
-    setExperienceList([...experienceList, { ...formField }]);
+    setExperienceList([...experienceList, {
+      title: "",
+      companyName: "",
+      city: "",
+      state: "",
+      startDate: "",
+      endDate: "",
+      workSummary: ""
+    }]);
   };
   const RemoveExperience = () => {
     setExperienceList((experienceList) => experienceList.slice(0, -1));
@@ -46,6 +63,25 @@ function Experience() {
       experience:experienceList
     });
   }, [experienceList]);
+  const onSave=()=>{
+    setLoading(true)
+    const data={
+        data:{
+            experience:experienceList.map(({ id, ...rest }) => rest)
+        }
+    }
+
+     console.log(experienceList)
+
+    GlobalApi.UpdateResumeDetail(params.resumeid,data).then(res=>{
+        console.log(res);
+        setLoading(false);
+        toast('Details updated !')
+    },(error)=>{
+        setLoading(false);
+    })
+
+}
 
   return (
     <div className="p-5 shadow-lg rounded-md border-t-primary border-t-4 mt-10">
@@ -134,7 +170,8 @@ function Experience() {
             - Remove
           </Button>
         </div>
-        <Button> Save   
+        <Button disabled={loading} onClick={()=>onSave()}>
+            {loading?<LoaderCircle className='animate-spin' />:'Save'}    
             </Button>
       </div>
     </div>
