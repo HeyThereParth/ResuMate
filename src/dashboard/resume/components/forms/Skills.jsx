@@ -52,7 +52,7 @@ function Skills() {
 
         GlobalApi.UpdateResumeDetail(resumeid,data)
         .then(resp=>{
-            console.log(resp);
+            // console.log(resp);
             setLoading(false);
             toast('Details updated !')
         },(error)=>{

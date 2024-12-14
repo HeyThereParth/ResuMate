@@ -31,11 +31,11 @@ function Summary({ enabledNext }) {
     setLoading(true);
     try {
       const PROMPT = prompt.replace("{jobTitle}", resumeInfo?.jobTitle || "Job");
-      console.log("Prompt sent:", PROMPT);
+      // console.log("Prompt sent:", PROMPT);
 
       const result = await AIchatSession.sendMessage(PROMPT);
       const responseText = await result.response.text();
-      console.log("Raw AI response:", responseText);
+      // console.log("Raw AI response:", responseText);
 
       // Parse the response text directly
       const parsedData = JSON.parse(responseText);
@@ -61,7 +61,7 @@ function Summary({ enabledNext }) {
 
     GlobalApi.UpdateResumeDetail(params?.resumeid, data)
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         setLoading(false);
         toast("Details updated");
       })

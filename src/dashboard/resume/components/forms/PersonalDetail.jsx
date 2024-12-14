@@ -14,7 +14,7 @@ function PersonalDetail({ enableNext }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(params);
+    // console.log(params);
   }, []);
 
   const handleInputChange = (e) => {
@@ -37,7 +37,7 @@ function PersonalDetail({ enableNext }) {
     };
     GlobalApi.UpdateResumeDetail(params?.resumeid, data).then(
       (resp) => {
-        console.log(resp);
+        // console.log(resp);
         enableNext(true);
         setLoading(false);
         toast("Detailes Updated");

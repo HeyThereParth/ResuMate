@@ -17,7 +17,7 @@ const [resumeInfo, setResumeInfo] = useState();
 
     const GetResumeInfo=() =>{
       GlobalApi.GetResumeByID(resumeid).then(resp=>{
-        console.log(resp.data.data);
+        // console.log(resp.data.data);
         setResumeInfo(resp.data.data)
       })
     }
